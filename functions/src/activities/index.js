@@ -1,5 +1,4 @@
 const admin = require('firebase-admin')
-const { snapshotConstructor } = require('firebase-functions/lib/providers/firestore')
 const serviceAccount = require('../../credentials.json')
 
 let db
@@ -24,7 +23,7 @@ exports.getActivities = (req, res) => {
         })
         res.status(200).json(activityResults)
     })
-    .catch(err => res.status(500).send('erroe getting activities:' + err))
+    .catch(err => res.status(500).send('error getting activities:' + err))
 }
 
 exports.postActivity = (req, res) => {
@@ -47,4 +46,22 @@ exports.postActivity = (req, res) => {
         this.getActivities(req, res)
     })
     .catch(err => res.status(500).send('error creating activity:' + err))
+}
+
+exports.patchActivity = (req, res) => {
+    if(!req.body || !req.body.duration || !req.params.activityId ){ //|| !req.params.userId
+        res,status(400).send('invalid request')
+    }
+    authDB()
+    let now = admin.firestore.FieldValue.serverTimestamp()
+    db.collection('activities').doc(req.params.activityId).update({
+        updated: now,
+        logs: admin.firestore.FieldValue.arrayUnion(req.body),
+        totalDuration: admin.firestore.FieldValue.increment(Number(req.body.duration))
+    })
+    .then(() => {
+        this.getActivities(req, res)
+    })
+    .catch(err => res.status(500).send('error updating activity:' + err))
+
 }
