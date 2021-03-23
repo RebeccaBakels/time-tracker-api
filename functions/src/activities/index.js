@@ -65,3 +65,19 @@ exports.patchActivity = (req, res) => {
     .catch(err => res.status(500).send('error updating activity:' + err))
 
 }
+exports.deleteActivity = (req, res) => {
+    if(!req.params.activityId){
+        res.status(400).send('Invalid Request')  
+        }
+    dbAuth()
+    db.collection('activities').doc(req.params.activityId).delete()
+    .then(() => {
+      res.status(200).json({
+        status: "success",
+        message: "Activity DELETED",
+        statusCode: 200,
+      });
+      return
+    })
+    .catch(err => res.status(500).send('delete failed:', err))
+  }
