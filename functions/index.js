@@ -13,6 +13,6 @@ app.use(cors())
 app.get('/activities', getActivities)
 app.post('/activities', postActivity)
 app.patch('/activities/:activityId', patchActivity)
-app.delete('/activities/:activityId', patchActivity)
+app.delete('/activities/:activityId', deleteActivity)
 
 exports.app = functions.https.onRequest(app)
