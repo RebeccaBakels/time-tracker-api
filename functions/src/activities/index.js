@@ -69,7 +69,7 @@ exports.deleteActivity = (req, res) => {
     if(!req.params.activityId){
         res.status(400).send('Invalid Request')  
         }
-    dbAuth()
+    authDB()
     db.collection('activities').doc(req.params.activityId).delete()
     .then(() => {
       res.status(200).json({
