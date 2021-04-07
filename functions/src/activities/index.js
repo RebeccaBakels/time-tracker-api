@@ -76,8 +76,10 @@ exports.deleteActivity = (req, res) => {
         status: "success",
         message: "Activity DELETED",
         statusCode: 200,
-      });
-      return
+      })
+    .then(() => {
+        this.getActivities(req, res)
+    })
     })
     .catch(err => res.status(500).send('delete failed:', err))
   }
